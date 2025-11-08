@@ -1,84 +1,114 @@
-// script.js - 所有交互逻辑
+// script.js - 精简、高效、模块化交互逻辑
 
-document.addEventListener('DOMContentLoaded', function () {
-    // 欢迎弹窗（可选）
-    // alert("网站加载成功！欢迎访问寒的个人主页");
+document.addEventListener('DOMContentLoaded', () => {
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => document.querySelectorAll(selector);
 
-    // ========== 下载按钮反馈（只写一次！）==========
-    const downloadBtn = document.getElementById('download-btn');
+    // ==================== 1. 主题切换（带本地持久化） ====================
+    const themeToggle = $('#theme-toggle');
+    const sunIcon = $('.sun');
+    const moonIcon = $('.moon');
+
+    if (themeToggle && sunIcon && moonIcon) {
+        const applyTheme = (isDark) => {
+            document.body.classList.toggle('dark-mode', isDark);
+            sunIcon.style.display = isDark ? 'none' : 'inline';
+            moonIcon.style.display = isDark ? 'inline' : 'none';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        };
+
+        // 初始化
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+        applyTheme(isDark);
+
+        // 点击切换
+        themeToggle.addEventListener('click', () => {
+            applyTheme(!document.body.classList.contains('dark-mode'));
+        });
+    }
+
+    // ==================== 2. 实时打招呼（带动画） ====================
+    const nameInput = $('#name-input');
+    const nameDisplay = $('#name-display');
+
+    if (nameInput && nameDisplay) {
+        nameInput.addEventListener('input', () => {
+            const name = nameInput.value.trim();
+            nameDisplay.textContent = name || '陌生人';
+
+            // 轻微放大动画
+            nameDisplay.style.transition = 'transform 0.2s ease';
+            nameDisplay.style.transform = 'scale(1.05)';
+            clearTimeout(nameDisplay._timer);
+            nameDisplay._timer = setTimeout(() => {
+                nameDisplay.style.transform = 'scale(1)';
+            }, 200);
+        });
+
+        // Enter 键失焦
+        nameInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') nameInput.blur();
+        });
+    }
+
+    // ==================== 3. 下载按钮反馈 ====================
+    const downloadBtn = $('#download-btn');
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function () {
-            const originalText = this.textContent;
+            const original = this.textContent;
             this.textContent = '下载中...';
-            this.style.pointerEvents = 'none'; // 防止重复点击
+            this.disabled = true;
 
             setTimeout(() => {
-                this.textContent = originalText;
-                this.style.pointerEvents = 'auto';
+                this.textContent = original;
+                this.disabled = false;
             }, 1500);
         });
     }
 
-    // ========== 暗黑模式切换 ==========
-    const toggleButton = document.getElementById('theme-toggle');
-    const sunIcon = document.querySelector('.sun');
-    const moonIcon = document.querySelector('.moon');
-    const body = document.body;
+    // ==================== 4. Logo 动态切换（点击循环） ====================
+    const logoContainer = $('.logo-container');
+    const logoStyles = ['style-1', 'style-2', 'style-3'];
+    let currentIndex = 0;
 
-    if (toggleButton && sunIcon && moonIcon) {
-        if (localStorage.getItem('theme') === 'dark') {
-            body.classList.add('dark-mode');
-            sunIcon.style.display = 'none';
-            moonIcon.style.display = 'inline';
-        }
+    if (logoContainer) {
+        const showStyle = (index) => {
+            $$(`.logo-text`).forEach(el => el.style.opacity = '0');
+            $(`.${logoStyles[index]}`).style.opacity = '1';
+        };
 
-        toggleButton.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            const isDark = body.classList.contains('dark-mode');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            sunIcon.style.display = isDark ? 'none' : 'inline';
-            moonIcon.style.display = isDark ? 'inline' : 'none';
+        logoContainer.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % logoStyles.length;
+            showStyle(currentIndex);
         });
+
+        // 鼠标悬停：1 → 2，离开回 1
+        logoContainer.addEventListener('mouseenter', () => {
+            if (currentIndex === 0) showStyle(1);
+        });
+        logoContainer.addEventListener('mouseleave', () => {
+            if (currentIndex === 1) showStyle(0);
+        });
+
+        // 初始化
+        showStyle(0);
     }
 
-    // ========== 其他按钮点击反馈（可选）==========
-    const buttons = document.querySelectorAll('.btn');
-    buttons.forEach(btn => {
-        // 排除 download-btn，避免重复
-        if (btn.id !== 'download-btn') {
-            btn.addEventListener('click', function () {
-                this.classList.add('clicked');
-                this.textContent = '已点击！';
+    // ==================== 5. 通用按钮点击反馈（排除 download-btn） ====================
+    $$('.btn').forEach(btn => {
+        if (btn.id === 'download-btn') return;
 
-                setTimeout(() => {
-                    this.classList.remove('clicked');
-                    this.textContent = '联系我'; // 或原始文字
-                }, 1000);
-            });
-        }
-    });
-});
-// === 事件监听：输入框实时显示 ===
-document.addEventListener('DOMContentLoaded', () => {
-    const nameInput = document.getElementById('name-input');
-    const nameDisplay = document.getElementById('name-display');
+        btn.addEventListener('click', function () {
+            const original = this.textContent;
+            this.classList.add('clicked');
+            this.textContent = '已点击！';
 
-    // 监听输入事件
-    nameInput.addEventListener('input', () => {
-        const value = nameInput.value.trim();
-        nameDisplay.textContent = value || '陌生人';
-
-        // 可选：加动画
-        nameDisplay.style.transform = 'scale(1.1)';
-        setTimeout(() => {
-            nameDisplay.style.transform = 'scale(1)';
-        }, 200);
-    });
-
-    // 可选：按 Enter 提交（增强体验）
-    nameInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            nameInput.blur(); // 收起键盘
-        }
+            setTimeout(() => {
+                this.classList.remove('clicked');
+                this.textContent = original;
+            }, 800);
+        });
     });
 });
