@@ -124,6 +124,19 @@
     <section id="contact" class="section">
         <div class="container">
             <h2>联系我</h2>
+            <!-- 实时打招呼 -->
+            <div class="greeting-box" style="margin-bottom: 1.5rem; text-align: center;">
+                <label for="name-input" style="font-size: 1.1rem; color: #555;">你的名字：</label>
+                <input 
+                    type="text" 
+                    id="name-input" 
+                    placeholder="输入你的名字..." 
+                    style="margin-top: 0.5rem; padding: 10px; width: 80%; max-width: 300px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;"
+                >
+                <p style="margin-top: 1rem; font-size: 1.3rem; color: #007bff; font-weight: bold;">
+                    你好，<span id="name-display">陌生人</span>！
+                </p>
+            </div>
             <form action="https://formspree.io/f/xwpwgjyl" method="POST" class="contact-form">>
                 <input type="text" name="name" placeholder="你的名字" required>
                 <input type="email" name="email" placeholder="你的邮箱" required>

@@ -58,3 +58,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+// === 事件监听：输入框实时显示 ===
+document.addEventListener('DOMContentLoaded', () => {
+    const nameInput = document.getElementById('name-input');
+    const nameDisplay = document.getElementById('name-display');
+
+    // 监听输入事件
+    nameInput.addEventListener('input', () => {
+        const value = nameInput.value.trim();
+        nameDisplay.textContent = value || '陌生人';
+
+        // 可选：加动画
+        nameDisplay.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            nameDisplay.style.transform = 'scale(1)';
+        }, 200);
+    });
+
+    // 可选：按 Enter 提交（增强体验）
+    nameInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            nameInput.blur(); // 收起键盘
+        }
+    });
+});
