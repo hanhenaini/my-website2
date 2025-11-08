@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寒的个人主页</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<script src="script.js"></script>
+<body>
+
+    <!-- 1. 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h2>寒</h2>
+            <ul class="nav-menu">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#about">关于</a></li>
+                <li><a href="#projects">项目</a></li>
+                <li><a href="#contact">联系</a></li>
+                <!-- 在 .nav-menu 里加 -->
+                <li>
+                    <button id="theme-toggle" class="theme-btn">
+                     <span class="sun">Sun</span>
+                    <span class="moon" style="display:none;">Moon</span>
+                        </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 2. 英雄区 -->
+    <section id="home" class="hero">
+    <div class="container hero-container">
+    <div class="hero-main">
+        <img src="images/avatar.jpg" alt="寒的头像" class="avatar">
+        <h1>你好，我是 <span class="highlight">寒</span></h1>
+        <p class="tagline">程序员 · 终身学习者 · 热爱旅行与代码</p>
+        
+        <!-- 签证状态 -->
+        <div class="status-badge">
+            <span class="status-icon">Visa</span>
+            <span class="status-text">Working Holiday Visa · 2026.03 到期</span>
+        </div>
+    </div>
+
+    <div class="hero-actions">
+        <!-- 下载简历卡片 -->
+        <div class="action-card resume-card">
+            <div class="card-icon">PDF</div>
+            <div class="card-content">
+                <h3>下载简历</h3>
+                <p>1 页 PDF · 最新版</p>
+                <a href="resume.pdf" download class="btn card-btn" id="download-btn">
+                    下载
+                </a>
+            </div>
+        </div>
+
+        <!-- 联系我卡片 -->
+        <a href="#contact" class="action-card contact-card">
+            <div class="card-icon">Email</div>
+            <div class="card-content">
+                <h3>联系我</h3>
+                <p>发送消息 · 快速响应</p>
+            </div>
+        </a>
+    </div>
+    </div>
+    </section>
+    <!-- 3. 关于我 -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2>关于我</h2>
+            <div class="about-grid">
+                <div>
+                    <p>28岁，来自中国，现居新西兰。</p>
+                    <p>目前是一名全栈开发工程师，专注 Web 开发，喜欢用代码解决问题。</p>
+                    <p>业余时间喜欢阅读、旅行、摄影和写技术博客。</p>
+                </div>
+                <div>
+                    <h3>技能</h3>
+                    <ul class="skills">
+                        <li>HTML / CSS / JavaScript</li>
+                        <li>Python / Node.js</li>
+                        <li>React / Vue</li>
+                        <li>Git / GitHub</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. 项目展示 -->
+    <section id="projects" class="section bg-light">
+        <div class="container">
+            <h2>我的项目</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h3>个人博客系统</h3>
+                    <p>用 Flask + SQLite 搭建，支持 Markdown 写作。</p>
+                    <a href="#" class="project-link">查看 →</a>
+                </div>
+                <div class="project-card">
+                    <h3>天气查询 App</h3>
+                    <p>React + OpenWeather API，前后端分离。</p>
+                    <a href="#" class="project-link">查看 →</a>
+                </div>
+                <div class="project-card">
+                    <h3>这个网站！</h3>
+                    <p>你正在看的，就是我用 HTML+CSS 手写的主页。</p>
+                    <a href="#" class="project-link">源码 →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 联系表单 -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2>联系我</h2>
+            <form action="https://formspree.io/f/xwpwgjyl" method="POST" class="contact-form">>
+                <input type="text" name="name" placeholder="你的名字" required>
+                <input type="email" name="email" placeholder="你的邮箱" required>
+                <textarea name="message" placeholder="留言内容..." rows="5" required></textarea>
+                <button type="submit" class="btn">发送消息</button>
+            </form>
+            <p class="form-note">或者直接邮件我： <a href="mailto:han02902341100@gmail.com">to</a></p>
+        </div>
+    </section>
+
+    <!-- 6. 页脚 -->
+    <footer class="footer">
+        <p>© 2025 寒 | 住在新西兰，写代码，爱生活</p>
+        <div class="social">
+            <a href="#">GitHub</a> |
+            <a href="#">LinkedIn</a> |
+            <a href="#">微博</a>
+        </div>
+    </footer>
+
+</body>
+</html>
