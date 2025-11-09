@@ -37,7 +37,140 @@ body { font-family: var(--font); line-height: 1.6; color: #333; background: #f8f
 
 .hero-container { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; max-width: 1200px; margin: 0 auto; padding: 0 20px; align-items: center; }
 .hero-main { text-align: left; }
+
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font); line-height: 1.6; color: #333; background: #f8f9fa; transition: background 0.4s, color 0.4s; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+/* ========================================
+   2. 导航栏
+======================================== */
+.navbar { position: fixed; top: 0; left: 0; right: 0; background: #fff; box-shadow: var(--shadow-sm); z-index: 1000; }
+.nav-container { display: flex; justify-content: space-between; align-items: center; padding: 1rem 20px; max-width: 1100px; margin: 0 auto; }
+.nav-menu { display: flex; gap: 2rem; list-style: none; }
+.nav-menu a { color: #333; text-decoration: none; font-weight: 500; transition: var(--transition); }
+.nav-menu a:hover { color: #007bff; }
+
+/* ========================================
+   3. 英雄区
+======================================== */
+.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding-top: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; }
+.hero-content h1 { font-size: 3.5rem; margin-bottom: 1rem; }
+.highlight { color: #ffd700; }
+.avatar { width: 150px; height: 150px; border-radius: 50%; border: 5px solid white; margin-bottom: 1.5rem; object-fit: cover; }
+.btn { display: inline-block; padding: 12px 30px; background: #ffd700; color: #333; text-decoration: none; border-radius: var(--radius-lg); margin-top: 1.5rem; font-weight: bold; transition: var(--transition); }
+.btn:hover { background: #ffed4e; transform: translateY(-3px); }
+
+.hero-container { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; max-width: 1200px; margin: 0 auto; padding: 0 20px; align-items: center; }
+.hero-main { text-align: left; }
 .hero-main .avatar { width: 180px; height: 180px; border: 6px solid rgba(255,255,255,0.3); box-shadow: var(--shadow-lg); margin-bottom: 1.5rem; }
+.tagline { font-size: 1.3rem; margin: 1rem 0; opacity: 0.9; }
+.visit-count { font-size: 0.9rem; opacity: 0.8; margin-top: 1rem; }
+.status-badge { display: inline-flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.15); padding: 0.6rem 1rem; border-radius: var(--radius-lg); font-size: 0.95rem; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem; }
+.status-icon { background: #4ade80; color: white; padding: 0.2rem 0.5rem; border-radius: var(--radius-lg); font-weight: bold; font-size: 0.8rem; }
+
+.hero-actions { display: flex; flex-direction: column; gap: 1.5rem; }
+.action-card { background: rgba(255,255,255,0.12); border-radius: var(--radius-md); padding: 1.5rem; display: flex; align-items: center; gap: 1rem; backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); transition: var(--transition); text-decoration: none; color: white; }
+.action-card:hover { transform: translateY(-8px); background: rgba(255,255,255,0.2); box-shadow: var(--shadow-lg); }
+.card-icon { width: 60px; height: 60px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; }
+.resume-card .card-icon { background: linear-gradient(135deg, #ff6b6b, #ee5a52); }
+.contact-card .card-icon { background: linear-gradient(135deg, #4ade80, #22c55e); }
+.card-content h3 { margin: 0 0 0.3rem; font-size: 1.3rem; }
+.card-content p { margin: 0 0 0.8rem; font-size: 0.9rem; opacity: 0.9; }
+.card-btn { background: #ffd700 !important; color: #000 !important; padding: 10px 20px !important; border-radius: var(--radius-lg); font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 15px rgba(255,215,0,0.4); }
+.card-btn:hover { background: #ffed4e !important; transform: translateY(-2px); }
+
+/* ========================================
+   4. 通用
+======================================== */
+.section { padding: 80px 0; }
+.bg-light { background: #f1f3f5; }
+
+h2 { font-size: 2rem; margin-bottom: 1.5rem; color: #222; position: relative; padding-bottom: 0.8rem; font-weight: 700; }
+h2::after { content: ''; position: absolute; bottom: 0; left: 0; width: 60px; height: 4px; background: linear-gradient(90deg, #007bff, #00d4aa); border-radius: 2px; transition: width 0.4s ease; }
+h2:hover::after { width: 100px; }
+
+/* ========================================
+   5. 关于我 & 技能
+======================================== */
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 2rem; }
+.skills { list-style: none; padding: 0; }
+.skill-tag { display: inline-block; background: rgba(255,255,255,0.2); color: #333; padding: 10px 18px; margin: 6px 8px 6px 0; border-radius: var(--radius-lg); font-size: 0.95rem; font-weight: 600; backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.3); transition: var(--transition); box-shadow: var(--shadow-sm); }
+.skill-tag:hover { background: rgba(255,255,255,0.4); transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
+
+/* ========================================
+   6. 项目 & 联系 & 页脚
+======================================== */
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+.project-card { background: white; padding: 2rem; border-radius: 15px; box-shadow: var(--shadow-md); transition: transform 0.3s; }
+.project-card:hover { transform: translateY(-10px); }
+.project-link { color: #007bff; text-decoration: none; font-weight: bold; }
+
+.contact-form { max-width: 600px; margin: 0 auto; display: grid; gap: 1rem; }
+.contact-form input, .contact-form textarea { padding: 15px; border: 1px solid #ddd; border-radius: var(--radius-sm); font-size: 1rem; }
+.contact-form button { background: #007bff; color: white; border: none; padding: 15px; border-radius: var(--radius-sm); font-size: 1.1rem; cursor: pointer; }
+.form-note { text-align: center; margin-top: 1rem; color: #666; }
+
+.footer { text-align: center; padding: 2rem 0; background: #333; color: #aaa; font-size: 0.9rem; }
+.social a { color: #aaa; margin: 0 10px; text-decoration: none; }
+.social a:hover { color: white; }
+
+/* ========================================
+   7. 主题切换
+======================================== */
+.theme-btn { background: rgba(255,255,255,0.15); border: 2px solid transparent; cursor: pointer; font-size: 1.2rem; padding: 14px; border-radius: 50%; transition: var(--transition); backdrop-filter: blur(10px); width: 55px; height: 50px; display: flex; align-items: center; justify-content: center; }
+.theme-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.1); }
+body:not(.dark-mode) .theme-btn { border-color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.5); animation: pulse 2s infinite; }
+body.dark-mode .theme-btn { border-color: #a0aec0; box-shadow: 0 0 15px rgba(160,174,192,0.5); }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 15px rgba(255,215,0,0.5); } 50% { box-shadow: 0 0 25px rgba(255,215,0,0.8); } }
+
+/* ========================================
+   8. 暗黑模式
+======================================== */
+body.dark-mode { background: #121212; color: #e0e0e0; }
+body.dark-mode .navbar { background: #1e1e1e; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+body.dark-mode .section { background: #1e1e1e; }
+body.dark-mode .bg-light { background: #252525 !important; }
+body.dark-mode .project-card, body.dark-mode .contact-form input, body.dark-mode .contact-form textarea { background: #2d2d2d; color: #e0e0e0; border-color: #444; }
+body.dark-mode .btn { background: #ffd700; color: #000; }
+body.dark-mode a { color: #87ceeb; }
+body.dark-mode .footer { background: #0a0a0a; color: #888; }
+
+body.dark-mode h2 { color: #ffffff !important; }
+body.dark-mode h2::after { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+body.dark-mode .skill-tag { background: rgba(255,255,255,0.12); color: #ffffff !important; border-color: rgba(255,255,255,0.2); }
+body.dark-mode .skill-tag:hover { background: rgba(255,255,255,0.22); }
+body.dark-mode .style-1 { color: #fff; text-shadow: 2px 2px 4px rgba(255,255,255,0.1); }
+
+/* ========================================
+   9. Logo & 其他
+======================================== */
+.logo-container { position: relative; width: 60px; height: 60px; cursor: pointer; }
+.logo-text { position: absolute; top: 0; left: 0; font-size: 2.5rem; font-weight: bold; opacity: 0; transition: opacity 0.4s ease; }
+.style-1 { opacity: 1; font-family: 'KaiTi', 'STKaiTi', serif; color: #1a1a1a; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
+.logo-container:hover .style-1 { opacity: 0; }
+.logo-container:hover .style-2 { opacity: 1; }
+.style-2 { font-family: 'Arial Black', sans-serif; color: transparent; background: linear-gradient(45deg, #00ff88, #00b8ff, #8877ff); -webkit-background-clip: text; background-clip: text; text-shadow: 0 0 20px rgba(0,200,255,0.8); animation: glow 2s ease-in-out infinite alternate; }
+@keyframes glow { from { text-shadow: 0 0 10px rgba(0,200,255,0.6); } to { text-shadow: 0 0 30px rgba(0,200,255,1); } }
+
+.greeting-box { text-align: center; margin-bottom: 1.5rem; }
+.greeting-box label { font-size: 1.1rem; color: #555; display: block; margin-bottom: 0.5rem; }
+.greeting-box input { padding: 10px; width: 80%; max-width: 300px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; }
+.greeting-box p { margin-top: 1rem; font-size: 1.3rem; color: #007bff; font-weight: bold; }
+
+/* ========================================
+   10. 响应式
+======================================== */
+@media (max-width: 768px) {
+    .nav-menu { flex-direction: column; gap: 1rem; }
+    .hero-container { grid-template-columns: 1fr; text-align: center; }
+    .hero-main .avatar { width: 140px; height: 140px; }
+    .hero-actions { flex-direction: row; }
+    .action-card { flex: 1; }
+    .about-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 2.5rem; }
+}
 .tagline { font-size: 1.3rem; margin: 1rem 0; opacity: 0.9; }
 .visit-count { font-size: 0.9rem; opacity: 0.8; margin-top: 1rem; }
 .status-badge { display: inline-flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.15); padding: 0.6rem 1rem; border-radius: var(--radius-lg); font-size: 0.95rem; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem; }
