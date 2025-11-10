@@ -271,3 +271,83 @@ body.dark-mode .style-1 { color: #fff; text-shadow: 2px 2px 4px rgba(255,255,255
     .hero h1 { font-size: 2.5rem; }
 }
 
+/* ==================== 毛玻璃导航栏 - 终极版 ==================== */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 0.5rem 0;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all 0.4s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 浅色模式：白色半透明毛玻璃 */
+.navbar {
+    background: rgba(255, 255, 255, 0.45) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* 深色模式：深灰半透明毛玻璃 */
+body.dark-mode .navbar {
+    background: rgba(30, 30, 30, 0.45) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 2.2rem;
+    list-style: none;
+    align-items: center;
+}
+
+.nav-menu a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-menu a:hover {
+    color: #007bff;
+    background: rgba(0, 123, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* 深色模式菜单文字 */
+body.dark-mode .nav-menu a {
+    color: #e0e0e0;
+}
+
+body.dark-mode .nav-menu a:hover {
+    color: #4dabf7;
+    background: rgba(77, 171, 247, 0.2);
+}
+/* 滚动时导航栏加深 */
+.navbar.scrolled {
+    background: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(20px);
+}
+
+body.dark-mode .navbar.scrolled {
+    background: rgba(20, 20, 20, 0.95) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
