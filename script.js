@@ -1,10 +1,10 @@
-// script.js - 最终版，100% 适配线上后端
+// script.js - 终极版，100% 接通线上后端
 
 document.addEventListener('DOMContentLoaded', () => {
     const $ = (selector) => document.querySelector(selector);
     const $$ = (selector) => document.querySelectorAll(selector);
 
-    // 线上后端地址
+    // 你的真实线上后端地址（已确认可用）
     const API_URL = 'https://hanhenaini-backend-34e935e0abd0.herokuapp.com';
 
     // 1. 主题切换
