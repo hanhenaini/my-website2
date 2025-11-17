@@ -124,3 +124,69 @@ window.addEventListener('scroll', () => {
         navbar.classList.remove('scrolled');
     }
 });
+
+
+
+// 动态加载项目
+async function loadProjects() {
+    try {
+        const res = await fetch('http://127.0.0.1:5000/api/contact');
+        const projects = await res.json();
+        const grid = document.querySelector('.projects-grid');
+        grid.innerHTML = '';  // 清空静态
+        projects.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            card.innerHTML = `
+                <h3>${p.title}</h3>
+                <p>${p.description}</p>
+                <a href="${p.link}" class="project-link">查看</a>
+            `;
+            grid.appendChild(card);
+        });
+    } catch (err) {
+        console.error('加载项目失败', err);
+    }
+}
+loadProjects();  // 页面加载时调用
+
+
+// === 联系表单提交 ===
+const form = document.querySelector('.contact-form');
+if (form) {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const data = {
+            name: form.querySelector('input[placeholder="输入你的名字..."]')?.value.trim() || '匿名',
+            email: form.querySelector('input[placeholder="你的邮箱"]')?.value.trim() || '',
+            message: form.querySelector('textarea')?.value.trim() || ''
+        };
+
+        try {
+            // 必须是 POST！
+            const res = await fetch('http://127.0.0.1:5000/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            // 先读文本，防止 HTML 解析错误
+            const text = await res.text();
+            console.log('后端返回:', text);
+
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}: ${text}`);
+            }
+
+            const result = JSON.parse(text);
+            alert(result.success || result.error);
+            if (res.ok) form.reset();
+
+        } catch (err) {
+            console.error('发送失败:', err);
+            alert('发送失败：' + err.message);
+        }
+    });
+}
+
