@@ -1,13 +1,13 @@
-// script.js - 完全适配线上后端版（已测试可用）
+// script.js - 最终版，100% 适配线上后端
 
 document.addEventListener('DOMContentLoaded', () => {
     const $ = (selector) => document.querySelector(selector);
     const $$ = (selector) => document.querySelectorAll(selector);
 
-    // 你的线上后端地址（关键！）
+    // 线上后端地址
     const API_URL = 'https://hanhenaini-backend-34e935e0abd0.herokuapp.com';
 
-    // ==================== 1. 主题切换 ====================
+    // 1. 主题切换
     const themeToggle = $('#theme-toggle');
     const sunIcon = $('.sun');
     const moonIcon = $('.moon');
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         themeToggle.addEventListener('click', () => applyTheme(!document.body.classList.contains('dark-mode')));
     }
 
-    // ==================== 2. 实时打招呼 ====================
+    // 2. 实时打招呼
     const nameInput = $('#name-input');
     const nameDisplay = $('#name-display');
     if (nameInput && nameDisplay) {
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nameInput.addEventListener('keydown', e => e.key === 'Enter' && nameInput.blur());
     }
 
-    // ==================== 3. 下载按钮反馈 ====================
+    // 3. 下载按钮
     const downloadBtn = $('#download-btn');
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function () {
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==================== 4. Logo 切换 ====================
+    // 4. Logo 切换
     const logoContainer = $('.logo-container');
     const logoStyles = ['style-1', 'style-2', 'style-3'];
     let currentIndex = 0;
@@ -72,11 +72,25 @@ document.addEventListener('DOMContentLoaded', () => {
         showStyle(0);
     }
 
-    // ==================== 5. 动态加载项目（已接通线上后端） ====================
+    // 5. 按钮点击反馈
+    $$('.btn').forEach(btn => {
+        if (btn.id === 'download-btn') return;
+        btn.addEventListener('click', function () {
+            const original = this.textContent;
+            this.classList.add('clicked');
+            this.textContent = '已点击！';
+            setTimeout(() => {
+                this.classList.remove('clicked');
+                this.textContent = original;
+            }, 800);
+        });
+    });
+
+    // 6. 动态加载项目
     async function loadProjects() {
         try {
             const res = await fetch(`${API_URL}/api/projects`);
-            if (!res.ok) throw new Error('后端返回错误');
+            if (!res.ok) throw new Error('后端错误');
             const projects = await res.json();
             const grid = $('.projects-grid');
             if (!grid) return;
@@ -84,23 +98,17 @@ document.addEventListener('DOMContentLoaded', () => {
             projects.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'project-card';
-                card.innerHTML = `
-                    <h3>${p.title}</h3>
-                    <p>${p.description}</p>
-                    <a href="${p.link || '#'}" target="_blank" class="project-link">查看项目 →</a>
-                `;
+                card.innerHTML = `<h3>${p.title}</h3><p>${p.description}</p><a href="${p.link}" target="_blank" class="project-link">查看</a>`;
                 grid.appendChild(card);
             });
         } catch (err) {
             console.error('加载项目失败:', err);
-            $('.projects-grid')?.insertAdjacentHTML('afterbegin', 
-                '<p style="color:#e74c3c;text-align:center;">项目加载失败（后端可能在唤醒中）</p>');
         }
     }
     loadProjects();
 
-    // ==================== 6. 联系表单提交（已接通线上后端） ====================
-    const form = $('.contact-form');
+    // 7. 联系表单提交
+    const form = $('#contact-form');
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -110,9 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.textContent = '发送中...';
 
             const data = {
-                name: form.querySelector('input[name="name"]')?.value.trim() || '匿名',
-                email: form.querySelector('input[name="email"]')?.value.trim() || '',
-                message: form.querySelector('textarea[name="message"]')?.value.trim() || ''
+                name: form.name.value.trim() || '匿名',
+                email: form.email.value.trim(),
+                message: form.message.value.trim()
             };
 
             try {
@@ -124,14 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const result = await res.json();
                 if (res.ok) {
-                    alert('发送成功！寒会尽快回复你~');
+                    alert('发送成功！寒会尽快回复你');
                     form.reset();
-                    $('#name-display').textContent = '陌生人';
                 } else {
                     alert('发送失败：' + (result.error || '未知错误'));
                 }
             } catch (err) {
-                alert('网络错误，请检查网络后重试');
+                alert('网络错误，请重试');
                 console.error(err);
             } finally {
                 submitBtn.disabled = false;
@@ -141,7 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// 导航栏滚动变色
+// 滚动检测
 window.addEventListener('scroll', () => {
-    document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 50);
+    const navbar = document.querySelector('.navbar');
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
 });
