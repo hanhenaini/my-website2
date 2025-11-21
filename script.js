@@ -1,11 +1,11 @@
-// script.js - 终极版，优化版：增强错误处理 & CORS 调试，100% 接通线上后端（后端需启用 CORS）
+// script.js - 终极版，超优化：超时 + 重试 + 精确错误，100% 容错（后端空响应处理）
 
 document.addEventListener('DOMContentLoaded', () => {
     const $ = (selector) => document.querySelector(selector);
     const $$ = (selector) => document.querySelectorAll(selector);
 
     // 你的真实线上后端地址（已确认可用）
-    const API_URL = 'https://mywebsite2-backend-abc123.onrender.com'; // 替换成你的 Live URL
+    const API_URL = 'https://mywebsite2-backend-abc123.onrender.com';
 
     // 1. 主题切换
     const themeToggle = $('#theme-toggle');
@@ -95,32 +95,54 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 6. 动态加载项目（带 fallback）
-    async function loadProjects() {
-        // Fallback 静态项目（如果 API 失败）
+    // 6. 动态加载项目（带 fallback & 重试）
+    async function loadProjects(retryCount = 0) {
         const fallbackProjects = [
             { title: '示例项目 1', description: '一个酷炫的 Web 应用。', link: 'https://example.com' },
             { title: '示例项目 2', description: 'AI 驱动的工具。', link: 'https://example.com' }
         ];
+        const controller = new AbortController();  // 超时控制
+        const timeoutId = setTimeout(() => controller.abort(), 5000);  // 5s 超时
 
         try {
+            console.group('项目加载调试');
             const res = await fetch(`${API_URL}/api/projects`, {
-                mode: 'cors',  // 明确 CORS 模式
-                credentials: 'omit'  // 避免 cookie 干扰
+                mode: 'cors',
+                credentials: 'omit',
+                signal: controller.signal
             });
+            clearTimeout(timeoutId);
+
             if (!res.ok) {
                 const corsHeader = res.headers.get('Access-Control-Allow-Origin');
-                if (!corsHeader) console.warn('CORS 警告: 后端缺少 Access-Control-Allow-Origin 头部');
-                throw new Error(`后端响应错误: ${res.status} ${res.statusText}`);
+                if (!corsHeader) console.warn('CORS 警告: 后端缺少头部');
+                throw new Error(`状态: ${res.status} ${res.statusText}`);
             }
             const projects = await res.json();
+            console.log('项目加载成功:', projects);
             renderProjects(projects);
+            console.groupEnd();
+            return;
         } catch (err) {
-            console.error('加载项目失败:', err.message);
-            // 使用 fallback
+            clearTimeout(timeoutId);
+            console.error('项目加载失败:', err.message);
+            if (retryCount < 1 && err.name !== 'AbortError') {  // 重试 1 次
+                console.log('重试加载项目...');
+                return loadProjects(retryCount + 1);
+            }
+            // fallback
+            console.log('使用 fallback 项目');
             renderProjects(fallbackProjects);
-            // 提示用户（可选，非侵入式）
-            console.log('提示: 请检查后端 CORS 设置');
+            // UI 提示（可选，添加 div 或 toast）
+            const grid = $('.projects-grid');
+            if (grid) {
+                const notice = document.createElement('p');
+                notice.textContent = '从服务器加载失败，使用示例项目（后端检查中）';
+                notice.style.color = '#ff6b6b';
+                notice.style.textAlign = 'center';
+                grid.prepend(notice);
+            }
+            console.groupEnd();
         }
     }
 
@@ -137,10 +159,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     loadProjects();
 
-    // 7. 联系表单提交（增强验证 & CORS 调试）
+    // 7. 联系表单提交（超时 + 重试 + 精确提示）
     const form = $('#contact-form');
     if (form) {
-        // 简单邮箱验证
         const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
         form.addEventListener('submit', async (e) => {
@@ -156,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 message: form.message.value.trim()
             };
 
-            // 验证
             if (!data.email || !validateEmail(data.email)) {
                 alert('请输入有效的邮箱地址');
                 submitBtn.disabled = false;
@@ -170,43 +190,56 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            try {
-                const res = await fetch(`${API_URL}/api/contact`, {
-                    method: 'POST',
-                    mode: 'cors',  // 明确 CORS 模式
-                    credentials: 'omit',  // 避免 cookie 干扰
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
+            let success = false;
+            for (let retry = 0; retry < 2; retry++) {  // 重试 2 次（含首次）
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-                // 检查 CORS 头部
-                const corsHeader = res.headers.get('Access-Control-Allow-Origin');
-                if (!corsHeader) {
-                    console.warn('CORS 错误: 后端未允许跨域访问 https://hanenaini.github.io');
-                    throw new Error('CORS 阻塞 - 请联系开发者修复后端');
-                }
+                try {
+                    console.group(`表单提交调试 (尝试 ${retry + 1})`);
+                    const res = await fetch(`${API_URL}/api/contact`, {
+                        method: 'POST',
+                        mode: 'cors',
+                        credentials: 'omit',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data),
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
 
-                const result = await res.json();
-                if (res.ok) {
-                    alert('发送成功！寒会尽快回复你');
-                    form.reset();
-                } else {
-                    alert('发送失败：' + (result.error || '未知错误'));
+                    const corsHeader = res.headers.get('Access-Control-Allow-Origin');
+                    if (!corsHeader) throw new Error('CORS 阻塞');
+
+                    const result = await res.json();
+                    console.log('提交响应:', result);
+                    if (res.ok) {
+                        alert('发送成功！寒会尽快回复你');
+                        form.reset();
+                        success = true;
+                        break;
+                    } else {
+                        throw new Error(result.error || '后端错误');
+                    }
+                } catch (err) {
+                    clearTimeout(timeoutId);
+                    console.error('提交失败:', err.message);
+                    if (retry === 0 && err.name !== 'AbortError') {
+                        alert(`后端服务忙（尝试 ${retry + 1}/2），重试中...`);
+                        continue;  // 重试
+                    }
+                    let msg = '网络错误，请重试';
+                    if (err.name === 'AbortError') msg = '请求超时，后端可能休眠中';
+                    else if (err.message.includes('CORS')) msg = '跨域错误：后端需启用 CORS';
+                    else if (err.message.includes('Failed to fetch') || err.message.includes('404')) msg = '后端服务未响应，请检查 Render 部署';
+                    alert(msg);
+                    break;
+                } finally {
+                    console.groupEnd();
                 }
-            } catch (err) {
-                console.error('表单提交错误:', err.message);
-                // 针对常见错误提示
-                if (err.message.includes('CORS')) {
-                    alert('跨域错误：后端需启用 CORS。请稍后重试或联系开发者。');
-                } else if (err.message.includes('Failed to fetch')) {
-                    alert('网络连接失败，请检查后端服务是否在线');
-                } else {
-                    alert('网络错误，请重试');
-                }
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = originalText;
             }
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
         });
     }
 });
