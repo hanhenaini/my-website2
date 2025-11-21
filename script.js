@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const $$ = (selector) => document.querySelectorAll(selector);
 
     // 你的真实线上后端地址（已确认可用）
-    const API_URL = 'https://hanhenaini-backend-34e935e0abd0.herokuapp.com';
+   const API_URL = 'https://mywebsite2-backend-abc123.onrender.com'; // 替换成你的 Live URL
 
     // 1. 主题切换
     const themeToggle = $('#theme-toggle');
